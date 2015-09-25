@@ -59,7 +59,8 @@ gen.corpus <- function (ml, repo.path="./", suffix=".txt", outdir=NULL,
   ## NOTE: It's important to apply tolower before stopword removal;
   ## otherwise, phrases like "I'm" won't be removed properly
   corp <- tm_map(corp, content_transformer(tolower))
-  corp <- tm_map(corp, removeWords.useBytes, stopwords("english"))
+  corp <- tm_map(corp, content_transformer(removeWords.useBytes),
+                                           stopwords("english"))
   corp <- tm_map(corp, tm::removeNumbers)
   corp <- tm_map(corp, tm::removePunctuation)
   corp <- tm_map(corp, tm::stripWhitespace)
