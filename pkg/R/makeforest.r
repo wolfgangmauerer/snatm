@@ -52,13 +52,13 @@ gen.corpus <- function (ml, repo.path="./", suffix=".txt", outdir=NULL,
   }
   corp.orig <- corp
 
-  corp <- tm_map(corp, function(x) iconv(enc2utf8(x), sub="byte"))
+  corp <- tm_map(corp, content_transformer(function(x) iconv(enc2utf8(x), sub="byte")))
   corp <- tm_map(corp, tm.plugin.mail::removeCitation, removeQuoteHeader=T)
   corp <- tm_map(corp, tm.plugin.mail::removeSignature, marks=marks)
   corp <- tm_map(corp, tm.plugin.mail::removeMultipart)
   ## NOTE: It's important to apply tolower before stopword removal;
   ## otherwise, phrases like "I'm" won't be removed properly
-  corp <- tm_map(corp, tolower)
+  corp <- tm_map(corp, content_transformer(tolower))
   corp <- tm_map(corp, removeWords.useBytes, stopwords("english"))
   corp <- tm_map(corp, tm::removeNumbers)
   corp <- tm_map(corp, tm::removePunctuation)
@@ -86,7 +86,7 @@ make.forest <- function(corp, normalise.FUN=NULL, encoding="UTF-8") {
   if (sum(is.na(thread.ids)))
     stop("NAs in thread list")
 
-  Content <- sapply(sapply(corp, "Content"), paste,
+  Content <- sapply(sapply(corp, content), paste,
                     collapse = "\n")
 
   ## Provide consecutive identifiers for each message
@@ -94,10 +94,10 @@ make.forest <- function(corp, normalise.FUN=NULL, encoding="UTF-8") {
 
   ## Extract authors and headings from the corpus and build simple
   ## character vectors
-  authors <- sapply(corp, function (x) { Author(x)[1] } )
+  authors <- sapply(corp, function (x) { meta(x, tag="author")[1] } )
   attributes(authors) <- NULL
 
-  headings <- sapply(corp, function (x) { Heading(x)[1] } )
+  headings <- sapply(corp, function (x) { meta(x, tag="heading")[1] } )
   attributes(headings) <- NULL
 
   ## The forest collects unique (numeric) identifiers for every mail
