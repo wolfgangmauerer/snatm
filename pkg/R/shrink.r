@@ -45,10 +45,10 @@ shrink <- function(network,by=c("row","column")
     }
   }
   diag(newnet) <- 0
+
   rownames(newnet) <- colnames(newnet) <- rownames(network)
   if (length(keep)>0){
-    newnet <- newnet[,keep]
-    newnet <- newnet[keep,]
+    newnet <- newnet[keep, keep, drop=FALSE]
   }
   newnet
 }
