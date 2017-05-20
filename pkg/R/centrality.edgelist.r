@@ -62,6 +62,14 @@ function (terms, apply.to, data.path, max.terms=20)
       value <- cbind(authors, value)
       value <- ordermatrix(value, 2)
 
+      ## If there is only a single row in the result matrix, R
+      ## chooses character vector as data type, which requires
+      ## other selection operators than use below. Make sure that
+      ## he same subsetting can be used in every case.
+      if (class(value)=="character") {
+          value <- matrix(value, nrow=1)
+      }
+
       value <- cbind(value[, 1], seq(1:dim(value)[1])/dim(value)[1])
       edgelist <- rbind(edgelist, cbind(value[, 1], terms[i], value[, 2]))
     }
