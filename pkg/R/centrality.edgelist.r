@@ -78,6 +78,8 @@ function (terms, apply.to, data.path, max.terms=20)
     ## edgelist[,1] = author
     ## edgelist[,2] = term
     ## edgelist[,3] = outdegree
-    dimnames(edgelist) <- list(NULL, c("author", "term", "outdegree"))
+    if (!is.null(edgelist)) {
+        dimnames(edgelist) <- list(NULL, c("author", "term", "outdegree"))
+    }
     return (list(edgelist=edgelist, sizes=sizes))
 }
