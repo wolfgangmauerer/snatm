@@ -25,7 +25,7 @@ removeWords.useBytes <- function(x, words) {
 
 gen.corpus <- function (ml, repo.path="./", suffix=".txt", outdir=NULL,
                         marks=character(0), encoding="UTF-8", preprocess=NULL,
-                        postprocess=NULL)
+                        postprocess=NULL, debug=FALSE)
 {
   ml.base <- file.path(repo.path, ml)
   ml.filename <- paste(ml.base, suffix, sep = "")
@@ -33,7 +33,7 @@ gen.corpus <- function (ml, repo.path="./", suffix=".txt", outdir=NULL,
   ## exists. TODO: We need some more intelligent algorithm to deal
   ## with incremental updates.
   if (!exists("MBoxSource")) {
-    timestamp("Starting mbox conversion")
+    if (debug) { timestamp("Starting mbox conversion") }
     if (!file.exists(ml.base)) {
       tm.plugin.mail::convert_mbox_eml(ml.filename,
                                        paste(ml.base, "/", sep = ""))
@@ -42,10 +42,10 @@ gen.corpus <- function (ml, repo.path="./", suffix=".txt", outdir=NULL,
   } else {
     mailbox.source <- MBoxSource(ml.filename, encoding=encoding)
   }
-  timestamp("starting corpus generation")
+  if (debug) { timestamp("starting corpus generation") }
   corp <- tm::Corpus(mailbox.source,
                      readerControl = list(reader=readMail(DateFormat = "%a, %d %b %Y %H:%M:%S")))
-  timestamp("corpus generation finished!")
+  if (debug) { timestamp("corpus generation finished!") }
   
   if (!is.null(preprocess)) {
     corp <- preprocess(corp)
