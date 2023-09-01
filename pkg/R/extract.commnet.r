@@ -12,7 +12,8 @@ extract.commnet <- function (forest, terms, apply.to, data.path) {
         if (apply.to == "content") {
             net <- createedges(forest, contentfilter = terms[i])
         }
-        if (is.na(net) || is.null(net))
+
+        if (any(is.na(net)) || is.null(net))
           next
 
         if (dim(net)[1] > 0) {

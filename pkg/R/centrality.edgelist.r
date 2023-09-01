@@ -66,7 +66,7 @@ function (terms, apply.to, data.path, max.terms=20)
       ## chooses character vector as data type, which requires
       ## other selection operators than use below. Make sure that
       ## he same subsetting can be used in every case.
-      if (class(value)=="character") {
+      if ("character" %in% class(value)) {
           value <- matrix(value, nrow=1)
       }
 
